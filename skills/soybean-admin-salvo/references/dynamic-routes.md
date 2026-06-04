@@ -15,10 +15,11 @@ GET  /route/isRouteExist?routeName=<name>      -> data: boolean
 
 ## MenuRoute shape
 
-soybean-admin's route objects follow its `@elegant-router` types. **Verify the exact fields against the frontend's `src/typings/elegant-router.d.ts` and `src/typings/api/route.d.ts`** before finalizing — the shape evolves with the template version. A representative node:
+soybean-admin's route objects follow its `@elegant-router` types. **Verify the exact fields against the frontend's `src/typings/elegant-router.d.ts` and `src/typings/api/route.d.ts`** before finalizing — the shape evolves with the template version. Current v2 `Api.Route.MenuRoute` extends the elegant-router route with a required `id: string`. A representative node:
 
 ```jsonc
 {
+  "id": "manage",                    // required by current Api.Route.MenuRoute
   "name": "manage",                 // unique route name
   "path": "/manage",                // path
   "component": "layout.base",       // layout / view ref (elegant-router convention)
@@ -33,6 +34,7 @@ soybean-admin's route objects follow its `@elegant-router` types. **Verify the e
   },
   "children": [
     {
+      "id": "manage_user",
       "name": "manage_user",
       "path": "/manage/user",
       "component": "view.manage_user",

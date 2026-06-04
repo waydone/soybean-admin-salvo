@@ -1,6 +1,6 @@
 {
   "name": "soybean-admin-salvo",
   "description": "Wire/debug a Rust + Salvo backend that serves a soybean-admin (Vue3 + Naive UI) frontend — {code,msg,data} envelope, JWT refresh, /auth/* endpoints, dev proxy.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": { "name": "waydone", "email": "coco18889@icloud.com" }
 }

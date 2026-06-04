@@ -101,6 +101,7 @@ impl<T: Serialize> Res<T> {
 impl<T: Serialize + Send + 'static> Writer for Res<T> {
     async fn write(self, _req: &mut Request, _depot: &mut Depot, res: &mut Response) {
         // HTTP 200 always — soybean reads status from the `code` field, not the HTTP status.
+        res.status_code(StatusCode::OK);
         res.render(Json(serde_json::json!({
             "code": self.code, "msg": self.msg, "data": self.data
         })));
