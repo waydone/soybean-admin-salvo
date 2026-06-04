@@ -1,0 +1,23 @@
+{
+  "skill_name": "soybean-admin-salvo",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "我在用 salvo 写后端(Rust 项目),前端是 soybean-admin。帮我把对接登录的后端接口写出来——登录、刷新 token、拿用户信息这三个,用 JWT 鉴权。先给我能直接跑的代码片段,账号先写死 Super/123456 方便测试。",
+      "expected_output": "三个 handler(login/refreshToken/getUserInfo)+ 统一 {code,msg,data} 信封的 Writer。code 为字符串 \"0000\";data 里放 token/refreshToken / userInfo。getUserInfo 走 JWT。refreshToken 失败返回登出码而非过期码。字段名 camelCase(userName/refreshToken/userId)。Salvo 0.93.0 API。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "我 soybean-admin clone 下来 pnpm dev 起在 :9527,Salvo 后端也在 localhost:5800 跑着了,但点登录前端好像没把请求发到后端 / 连不上。后端我确认在跑。哪里没配对?",
+      "expected_output": "诊断出真根因:dev 脚本是 `vite --mode test` → 经 loadEnv 加载 .env.test(VITE_SERVICE_BASE_URL 指向 Apifox mock),根本不读 .env.development → 请求被代理到 mock 而非本地 Salvo(不是打到 undefined)。给出两条修法:A 改 .env.test 的 VITE_SERVICE_BASE_URL 为本地 Salvo;B 把 dev 脚本改回纯 vite + 新建 .env.development。两者保留 VITE_HTTP_PROXY=Y 走 /proxy-default 同源代理免 CORS。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "soybean-admin 接我的 salvo 后端,登录接口我返回的是 {\"code\":0,\"message\":\"ok\",\"token\":\"xxx.yyy.zzz\"},但前端登录完还是跳回登录页、拿不到数据。后端返回格式是不是有问题?",
+      "expected_output": "指出信封三处不符:code 必须是字符串 \"0000\" 不是数字 0;字段是 msg 不是 message;token 必须放在 data 里({code,msg,data:{token,refreshToken}})而不是顶层。给出正确信封示例。",
+      "files": []
+    }
+  ]
+}

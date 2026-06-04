@@ -1,0 +1,22 @@
+[
+  {"query": "用 salvo 给 soybean-admin 写后端,登录、刷新token、拿用户信息这几个接口怎么搞", "should_trigger": true},
+  {"query": "我 soybean-admin 登录一直失败,后端是 rust salvo 写的,返回 {code:200,data:{token}} 前端不认", "should_trigger": true},
+  {"query": "soybean admin 前端要求后端返回什么 json 格式?我后端用的 Salvo", "should_trigger": true},
+  {"query": "salvo 里怎么实现 soybean-admin 那个 access token 过期自动刷新、refreshToken 接口", "should_trigger": true},
+  {"query": "我的 vue 后台 soybean-admin pnpm dev 起在 9527,salvo 后端在 5800,点登录前端没把请求发过去", "should_trigger": true},
+  {"query": "help me build the /auth/getUserInfo endpoint in my Salvo app for a soybean-admin frontend, JWT bearer", "should_trigger": true},
+  {"query": "soybean-admin 接 salvo 后端,static 模式下需要实现哪几个接口", "should_trigger": true},
+  {"query": "salvo 后端给 soybean-admin 返回 code 0000 了但前端登录完还是白屏 / 跳回登录页", "should_trigger": true},
+  {"query": "前端 soybean naive ui admin 后端 rust salvo,登录 200 了但 getUserInfo 拿不到 roles buttons", "should_trigger": true},
+  {"query": "把我这个 salvo 项目改造成能给 soybeanjs 的 admin 模板当后端", "should_trigger": true},
+  {"query": "salvo 怎么写一个 websocket 实时推送服务", "should_trigger": false},
+  {"query": "soybean-admin 怎么加一个新菜单页面、改主题主色", "should_trigger": false},
+  {"query": "用 axum 给 soybean-admin 写登录后端接口", "should_trigger": false},
+  {"query": "salvo 接 vue-vben-admin 当后端怎么写登录", "should_trigger": false},
+  {"query": "soybean-admin 这个项目代码质量怎么样,和 vben 比哪个好", "should_trigger": false},
+  {"query": "salvo 里加 JWT 鉴权 HS256 保护 /api 路由,通用写法", "should_trigger": false},
+  {"query": "vue 项目调后端跨域 CORS 报错,salvo 这边 cors 中间件怎么配", "should_trigger": false},
+  {"query": "soybean-admin pnpm build 出来的 dist 怎么部署到 nginx", "should_trigger": false},
+  {"query": "naive-ui 的 NDataTable 远程分页怎么用", "should_trigger": false},
+  {"query": "salvo 的自定义 Writer 统一返回 {code,msg,data} 信封怎么写,通用的", "should_trigger": false}
+]
