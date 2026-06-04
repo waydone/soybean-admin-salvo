@@ -1,0 +1,14 @@
+{
+  "name": "soybean-admin-salvo",
+  "owner": { "name": "waydone", "email": "coco18889@icloud.com" },
+  "metadata": { "description": "soybean-admin ↔ Rust/Salvo backend integration skill", "version": "0.1.0" },
+  "plugins": [
+    {
+      "name": "soybean-admin-salvo",
+      "source": "./",
+      "description": "Implement/debug a Rust + Salvo backend for a soybean-admin (Vue3 + Naive UI) frontend — the {code,msg,data} envelope, success/logout/expired code segments, JWT access+refresh (force_passed trick), Res<T> Writer + JwtAuth, .env dev-proxy gotcha. Compile-verified against Salvo 0.93.0.",
+      "category": "development",
+      "tags": ["rust", "salvo", "soybean-admin", "vue", "naive-ui", "backend", "integration"]
+    }
+  ]
+}

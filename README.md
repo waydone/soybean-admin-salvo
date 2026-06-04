@@ -28,3 +28,8 @@ Makes the Salvo backend satisfy soybean-admin's fixed frontend service-layer con
 ## Properties & verification
 
 Zero hooks / zero MCP / zero extra permissions — pure reference text. The Salvo code in `SKILL.md` was `cargo check`-verified against salvo 0.93.0 (0 errors) by an independent review (codex + agy), the frontend contract was cross-checked against the real soybean-admin v2.2.0 source, and the dev-gotcha fix was behavior-verified by re-running the eval. Built/maintained 2026-06 via the skill-creator flow.
+
+## Install
+
+- **As a plugin (marketplace):** `/plugin marketplace add waydone/soybean-admin-salvo`, then `/plugin install soybean-admin-salvo@soybean-admin-salvo`.
+- **Local (symlink):** `ln -sfn /Users/coco/Documents/code/soybean-admin-salvo/skills/soybean-admin-salvo ~/.claude/skills/soybean-admin-salvo`.
