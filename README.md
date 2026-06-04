@@ -32,4 +32,8 @@ Zero hooks / zero MCP / zero extra permissions — pure reference text. The Salv
 ## Install
 
 - **As a plugin (marketplace):** `/plugin marketplace add waydone/soybean-admin-salvo`, then `/plugin install soybean-admin-salvo@soybean-admin-salvo`.
-- **Local (symlink):** `ln -sfn /Users/coco/Documents/code/soybean-admin-salvo/skills/soybean-admin-salvo ~/.claude/skills/soybean-admin-salvo`.
+- **Local (symlink):** from the repo root, `ln -sfn "$PWD/skills/soybean-admin-salvo" ~/.claude/skills/soybean-admin-salvo`.
+
+## Updating after an edit
+
+Bump `version` in `.claude-plugin/{plugin,marketplace}.json`, `git push`, then `claude plugin marketplace update soybean-admin-salvo && claude plugin update soybean-admin-salvo@soybean-admin-salvo`, and restart. Without a version bump, `plugin update` reports "already at latest" and won't pull the new content.
