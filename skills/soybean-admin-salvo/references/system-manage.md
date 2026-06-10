@@ -47,7 +47,9 @@ Entity fields (camelCase, on top of the common audit fields):
 - **Role**: `roleName`, `roleCode`, `roleDesc`
 - **Menu**: `parentId: number` (0 = root), `menuType` (`"1"|"2"`), `menuName`, `routeName`, `routePath`, `component?`, `icon`, `iconType` (`"1"|"2"`), `buttons?: {code, desc}[]`, `children?`, plus route-meta props (`i18nKey`, `order`, `hideInMenu`, `keepAlive`, …) mirroring the route system
 
-The template only ships **read** endpoints — the demo's create/edit/delete buttons mutate local table state. When the user wants real CRUD, design the write endpoints freely (the frontend code for them is the user's to write), but keep the envelope and field-name conventions.
+The template only ships **read** endpoints — the demo's create/edit/delete buttons are stubs (`// request` comment + fake success toast) that then re-fetch the list, so against a real backend nothing appears to change. When the user wants real CRUD, design the write endpoints freely (the frontend code for them is the user's to write), but keep the envelope and field-name conventions.
+
+Note: `getRoleList`/`getUserList` send `current`/`size` + filters; `getMenuList/v2`, `getAllRoles`, `getAllPages` and `getMenuTree` are called with **no parameters** (the menu list *response* is still the paginated shape — return everything in one page).
 
 ## Salvo sketch
 

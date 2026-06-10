@@ -40,7 +40,7 @@ These come from the frontend `.env` and decide what happens on each non-`0000` c
 
 - Frontend sends `Authorization: Bearer <token>` on every request (when a token is stored).
 - On an **expired-token code** (`9999`/`9998`/`3333`), the frontend automatically POSTs the stored refresh token to `/auth/refreshToken`, stores the new pair, and replays the original request. It de-dupes concurrent refreshes.
-- **CRITICAL:** `/auth/refreshToken` must **never** itself return an expired-token code — the refresh request would keep failing-and-retrying instead of resolving. Any other non-success code makes the frontend give up and log out; use the **logout code `8888`** by convention so the intent is explicit.
+- **CRITICAL:** `/auth/refreshToken` must **never** itself return an expired-token code — the refresh response would re-enter the expired-token branch and `await` its own in-flight refresh promise, deadlocking silently: no retry, no logout, every request that hit the expired code just hangs. Any other non-success code makes the frontend give up and log out; use the **logout code `8888`** by convention so the intent is explicit.
 
 ## Required endpoints
 
