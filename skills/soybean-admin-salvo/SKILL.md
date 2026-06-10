@@ -1,6 +1,6 @@
 ---
 name: soybean-admin-salvo
-description: "Implement or debug a Rust + Salvo backend that serves a soybean-admin (Vue3 + Naive UI) frontend. USE whenever the user wires soybean-admin to a Salvo backend, writes the /auth/login | /auth/refreshToken | /auth/getUserInfo endpoints, hits soybean-admin login failing / requests going to undefined / token not refreshing / a 'code 0000' or envelope-shape question that is explicitly about soybean-admin, configures .env.development for the soybean dev proxy, or asks what JSON a backend must return for soybean-admin. Even casual mentions count ('我的 soybean-admin 登录连不上', 'soybean 后端要返回什么', 'salvo 接 soybean admin'). Covers the {code,msg,data} response envelope, success-code 0000 + logout/modal/expired-token code segments, JWT access+refresh flow (and the force_passed trick that makes auto-refresh work), the Res<T> Writer + JwtAuth wiring, and dev-proxy-vs-CORS / serving the built dist. SKIP when soybean-admin is not in the picture: a generic Salvo custom Writer / unified {code,msg,data} envelope with no soybean-admin context goes to salvo-skill; a backend on axum/actix/rocket/other framework is not mine; pure frontend work (tweaking Vue/Naive UI styles, components, routing) is not mine. Pairs with salvo-skill for Salvo 0.93.0 framework specifics."
+description: "Implement or debug a Rust + Salvo backend that serves a soybean-admin (Vue3 + Naive UI) frontend. USE whenever the user wires soybean-admin to a Salvo backend, writes the /auth/login | /auth/refreshToken | /auth/getUserInfo endpoints, hits soybean-admin login failing / requests going to undefined / token not refreshing / a 'code 0000' or envelope-shape question that is explicitly about soybean-admin, configures .env.development for the soybean dev proxy, asks what JSON a backend must return for soybean-admin, or implements the manage-page list APIs (/systemManage/getUserList | getRoleList | getMenuList, soybean pagination records/current/size/total). Even casual mentions count ('我的 soybean-admin 登录连不上', 'soybean 后端要返回什么', 'soybean getUserList 返回什么格式', 'salvo 接 soybean admin'). Covers the {code,msg,data} response envelope, success-code 0000 + logout/modal/expired-token code segments, JWT access+refresh flow (and the force_passed trick that makes auto-refresh work), the Res<T> Writer + JwtAuth wiring, the /systemManage/* paginated contracts (example branch), and dev-proxy-vs-CORS / serving the built dist. SKIP when soybean-admin is not in the picture: a generic Salvo custom Writer / unified {code,msg,data} envelope with no soybean-admin context goes to salvo-skill; a backend on axum/actix/rocket/other framework is not mine; pure frontend work (tweaking Vue/Naive UI styles, components, routing) is not mine. Pairs with salvo-skill for Salvo 0.93.0 framework specifics."
 ---
 
 # soybean-admin ↔ Salvo backend
@@ -40,7 +40,7 @@ These come from the frontend `.env` and decide what happens on each non-`0000` c
 
 - Frontend sends `Authorization: Bearer <token>` on every request (when a token is stored).
 - On an **expired-token code** (`9999`/`9998`/`3333`), the frontend automatically POSTs the stored refresh token to `/auth/refreshToken`, stores the new pair, and replays the original request. It de-dupes concurrent refreshes.
-- **CRITICAL:** `/auth/refreshToken` must **never** itself return an expired-token code — that causes an infinite refresh loop. When the refresh token is invalid/expired, return a **logout code** (`8888`) instead, so the frontend logs the user out.
+- **CRITICAL:** `/auth/refreshToken` must **never** itself return an expired-token code — the refresh request would keep failing-and-retrying instead of resolving. Any other non-success code makes the frontend give up and log out; use the **logout code `8888`** by convention so the intent is explicit.
 
 ## Required endpoints
 
@@ -53,6 +53,12 @@ GET  /auth/getUserInfo    header Bearer               -> data {userId, userName,
 ```
 
 In `static` mode the frontend does **not** call any `/route/*` endpoint — don't implement them unless the user switches to `dynamic` mode. (`roles` gates menus/pages; the built-in super role is `R_SUPER`. `buttons` gates button-level permissions.) For `dynamic` mode (`/route/getConstantRoutes`, `/route/getUserRoutes`, `/route/isRouteExist`), see `references/dynamic-routes.md`.
+
+**Which clone shape does the user have?** The `main` branch is a slim template — auth (± route) is genuinely all it calls. The **`example` branch** (matches the online demo) adds the 系统管理 pages and a second API family `/systemManage/*` (getUserList / getRoleList / getMenuList/v2 …) with a paginated `{records, current, size, total}` envelope. If the user mentions user/role/menu management pages or `getUserList`, read `references/system-manage.md` for the full contract.
+
+**Negative contract (don't build what the frontend never calls):** logout is pure frontend (`resetStore()` clears storage — no `/auth/logout` request is ever sent); there is no change-password endpoint; the login captcha is a `setTimeout` fake that sends nothing. Implementing `/auth/logout` and wondering why it's never hit is a known dead end — if the user wants server-side token revocation, the frontend must be modified too.
+
+**Adding custom business APIs:** new endpoints follow the same envelope; on the frontend they go in `src/service/api/<domain>.ts` using `request<T>({url, method, params|data})` plus an `Api.<Domain>` namespace in `src/typings/api/`. Watch out: the secondary `demoRequest` instance (`createRequest`, `VITE_OTHER_SERVICE_BASE_URL`, `/proxy-demo`) expects a **different** envelope — success when `status === '200'`, payload under `result`. Don't copy its shape for the main `request` instance, and vice versa.
 
 ## Frontend wiring — the dev gotcha (check which env file `dev` actually loads)
 
@@ -215,4 +221,6 @@ let router = Router::new().push(
 - Protected routes use `force_passed(true)` + return `9999` on missing/expired token (so auto-refresh fires).
 - Confirm **which env file `pnpm dev` actually loads** (decided by the `--mode` in the `dev` script: `vite --mode test` → `.env.test`; plain `vite` → `.env.development`) and that its `VITE_SERVICE_BASE_URL` points at your local Salvo; `VITE_HTTP_PROXY=Y` (in base `.env`). Don't blindly create `.env.development` — under `--mode test` it's ignored.
 - JSON field names match (`userName`, `refreshToken`, `userId`) — soybean uses camelCase.
+- List endpoints (example branch / manage pages): `data` is `{records, current, size, total}`, `current`/`size` read from the **query string**, search filters are `Option<...>`. Menu list URL is `getMenuList/v2`. See `references/system-manage.md`.
+- Optional but handy: implement `GET /auth/error?code=&msg=` (echo the given code/msg as the envelope) — the frontend's `fetchCustomBackendError` uses it, and it lets you one-click test the 8888/7777/9999 behaviors end to end.
 - Verify non-trivial Salvo API against Context7 / salvo-skill; run `cargo check`. End to end: start Salvo, `pnpm dev`, log in, confirm `getUserInfo` succeeds and an expired access token triggers one refresh + replay.

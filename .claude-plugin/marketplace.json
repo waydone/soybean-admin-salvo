@@ -1,7 +1,7 @@
 {
   "name": "soybean-admin-salvo",
   "owner": { "name": "waydone", "email": "coco18889@icloud.com" },
-  "metadata": { "description": "soybean-admin ↔ Rust/Salvo backend integration skill", "version": "0.1.1" },
+  "metadata": { "description": "soybean-admin ↔ Rust/Salvo backend integration skill", "version": "0.1.2" },
   "plugins": [
     {
       "name": "soybean-admin-salvo",

@@ -18,6 +18,12 @@
       "prompt": "soybean-admin 接我的 salvo 后端,登录接口我返回的是 {\"code\":0,\"message\":\"ok\",\"token\":\"xxx.yyy.zzz\"},但前端登录完还是跳回登录页、拿不到数据。后端返回格式是不是有问题?",
       "expected_output": "指出信封三处不符:code 必须是字符串 \"0000\" 不是数字 0;字段是 msg 不是 message;token 必须放在 data 里({code,msg,data:{token,refreshToken}})而不是顶层。给出正确信封示例。",
       "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "我的 soybean-admin 用的是 example 分支,有用户管理页面。后端是 salvo,帮我把 /systemManage/getUserList 这个接口实现了,要支持按用户名和状态筛选、分页。返回什么格式前端才能正常渲染表格?",
+      "expected_output": "Salvo GET handler reading current/size + optional filters from the query string (sync parse_queries, Option fields), returning HTTP 200 {code:\"0000\", msg, data:{records, current, size, total}} with camelCase user fields (userName, userGender, nickName, userPhone, userEmail, userRoles, plus id/createBy/createTime/updateBy/updateTime/status), route mounted under /systemManage with the force_passed JWT guard",
+      "files": []
     }
   ]
 }
